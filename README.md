@@ -77,10 +77,9 @@ Running the Tests
 To run the tests, use the following command:
 
 Gradle
-``` ./gradlew test ```
+ ./gradlew test 
 Maven
-
-``` mvn test ```
+ mvn test
 
 Ensure that Docker is running when you execute the tests, as Testcontainers requires it to start the PostgreSQL container.
 
