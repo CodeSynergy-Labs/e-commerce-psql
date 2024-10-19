@@ -1,21 +1,21 @@
 package com.example.cartify.controller;
 
-import com.example.cartify.dao.ProductDao;
 import com.example.cartify.dto.request.ProductRequestDto;
 import com.example.cartify.dto.response.ProductResponseDto;
 import com.example.cartify.service.ProductService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/products")
 public class ProductController {
 
-    @Autowired
-    private ProductService productService;
+    private final ProductService productService;
 
     @GetMapping
     public ResponseEntity<List<ProductResponseDto>> getAllProducts() {
@@ -30,13 +30,13 @@ public class ProductController {
     }
 
     @PostMapping
-    public ResponseEntity<ProductResponseDto> addProduct(@RequestBody ProductRequestDto productRequestDto) {
+    public ResponseEntity<ProductResponseDto> addProduct(@RequestBody @Validated ProductRequestDto productRequestDto) {
         final ProductResponseDto productResponseDto = productService.addProduct(productRequestDto);
         return ResponseEntity.ok().body(productResponseDto);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ProductResponseDto> updateProduct(@PathVariable Long id, @RequestBody ProductRequestDto productRequestDto) {
+    public ResponseEntity<ProductResponseDto> updateProduct(@PathVariable Long id, @RequestBody @Validated ProductRequestDto productRequestDto) {
         final ProductResponseDto productResponseDto = productService.updateProduct(id, productRequestDto);
         return ResponseEntity.ok().body(productResponseDto);
     }

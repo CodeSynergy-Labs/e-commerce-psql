@@ -1,75 +1,78 @@
 package com.example.cartify.service;
 
+import com.example.cartify.dao.ProductDao;
 import com.example.cartify.dto.request.ProductRequestDto;
 import com.example.cartify.dto.response.ProductResponseDto;
 import com.example.cartify.error.ProductNotFoundException;
+import com.example.cartify.mapper.ProductRequestMapper;
+import com.example.cartify.mapper.ProductResponseMapper;
 import com.example.cartify.repository.ProductRepository;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class ProductServiceImpl implements ProductService {
 
     private static final Logger logger = LoggerFactory.getLogger(ProductServiceImpl.class);
 
 
-    @Autowired
-    private ProductRepository productRepository;
+    private final ProductRepository productRepository;
+
+    private final ProductRequestMapper productRequestMapper;
+
+    private final ProductResponseMapper productResponseMapper;
 
     @Override
     public List<ProductResponseDto> getAllProducts() {
-        // productRepository.findAll();
+        productRepository.findAll();
         return null;
     }
 
     @Override
     public ProductResponseDto getProductById(Long id) {
-      /*  logger.debug("Fetching product with id: {}", id);
-        return productRepository.findById(id)
+        logger.debug("Fetching product with id: {}", id);
+        final ProductDao productDao = productRepository.findById(id)
                 .orElseThrow(() -> {
                     logger.error("Product with id {} not found", id);
                     return new ProductNotFoundException("Product not found");
-                });*/
-        return null;
+                });
+
+        return productResponseMapper.mapDaoToResponseDto(productDao);
     }
 
     @Override
     public ProductResponseDto addProduct(ProductRequestDto productRequestDto) {
-     /*   if (productRepository.existsByName(productRequestDto.getName())) {
+        if (productRepository.existsByName(productRequestDto.getName())) {
             throw new ProductNotFoundException("Product with name " + productRequestDto.getName() + " already exists");
         }
-        return productRepository.save(productDao);*/
-        return null;
+        final ProductDao productDao = productRequestMapper.mapRequestDtoToDao(productRequestDto);
+        productRepository.save(productDao);
+        return productResponseMapper.mapDaoToResponseDto(productDao);
     }
 
     @Override
-    public ProductResponseDto updateProduct(Long id, ProductRequestDto productRequestDto) {
-        // Fetch the existing product
-      /*  productRepository.findById(id)
+    public ProductResponseDto updateProduct(final Long id, final ProductRequestDto productRequestDto) {
+        productRepository.findById(id)
                 .orElseThrow(() -> new ProductNotFoundException("Product with id " + id + " not found"));
 
-
-        updatedProductDao = ProductDao.builder().name(updatedProductDao.getName()).
-                description(updatedProductDao.getDescription()).price(updatedProductDao.getPrice())
-                .quantity(updatedProductDao.getQuantity()).categoryDao(updatedProductDao.getCategoryDao())
+        final ProductDao updatedProductDao = ProductDao.builder().name(productRequestDto.getName()).
+                description(productRequestDto.getDescription()).price(productRequestDto.getPrice())
+                .quantity(productRequestDto.getQuantity())
                 .build();
 
-
-        final ProductDao productDao = productRepository.save(updatedProductDao);*/
-
-        return null;
-
+        productRepository.save(updatedProductDao);
+        return productResponseMapper.mapDaoToResponseDto(updatedProductDao);
     }
 
     @Override
     public void deleteProduct(Long id) {
-        // Check if the product exists before attempting to delete
         if (!productRepository.existsById(id)) {
             throw new ProductNotFoundException("Product with id " + id + " not found");
         }
