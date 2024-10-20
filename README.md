@@ -1,4 +1,4 @@
-# Cartify Application - PostgreSQL Testcontainers Integration
+# E-Commerce Application - PostgreSQL Testcontainers Integration
 
 This repository contains a Java Spring Boot application for managing products (`ProductDao` entity) and integrates with PostgreSQL using **Testcontainers** for database testing in isolated environments. This document outlines the project setup, Testcontainers usage, and instructions for running tests.
 
